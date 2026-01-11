@@ -4,33 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dd9cd81b-c280-4928-842f-be51ae6a47e1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/copilot.data.migration.agent.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/edemdu.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/courses/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/courses/admin.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/courses/apps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/courses/forms.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/courses/models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/courses/urls.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/apps/courses/views.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/admin/courses/enrollment/change_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/courses/course_detail.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/courses/course_list.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/courses/dashboard.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/courses/manual_payment.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/courses/receipt.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/templates/courses/waiting_confirmation.html" afterDir="false" />
-    </list>
+    <list default="true" id="dd9cd81b-c280-4928-842f-be51ae6a47e1" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -132,7 +106,7 @@
       <updated>1767790883297</updated>
       <workItem from="1767790884496" duration="847000" />
       <workItem from="1767791869628" duration="2302000" />
-      <workItem from="1767904895117" duration="16929000" />
+      <workItem from="1767904895117" duration="17231000" />
     </task>
     <servers />
   </component>
