@@ -105,8 +105,13 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
 # WhiteNoise optimization for faster loading
-# Change from 'CompressedManifestStaticFilesStorage' to just 'CompressedStaticFilesStorage'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# settings.py
+
+# 1. Change the storage to the most basic WhiteNoise version
+STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
+
+# 2. Add these lines to help WhiteNoise find the files
+WHITENOISE_MANIFEST_STRICT = False
 
 
 # --- MEDIA FILES (Cloudinary) ---
