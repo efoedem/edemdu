@@ -5,13 +5,25 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.db.models import Count, Sum, Q
 from openpyxl import Workbook  # Ensure 'pip install openpyxl' is run
-from .models import Enrollment
+from .models import Enrollment, Course  # Added Course here
 
 
+# --- Course Admin Registration ---
+@admin.register(Course)
+class CourseAdmin(admin.ModelAdmin):
+    list_display = ('title', 'price', 'created_at')
+    search_fields = ('title', 'description')
+    list_filter = ('created_at',)
+    # This allows you to edit the price directly from the list view
+    list_editable = ('price',)
+
+
+# --- Enrollment Admin Registration ---
 @admin.register(Enrollment)
 class EnrollmentAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'course', 'reference_id', 'status', 'whatsapp_action', 'delete_button')
     list_editable = ('status',)
+    list_filter = ('status', 'course')
     search_fields = ('full_name', 'index_number', 'reference_id')
     actions = ['export_to_excel']
 
@@ -49,7 +61,10 @@ class EnrollmentAdmin(admin.ModelAdmin):
         if obj.status == 'confirmed' and obj.whatsapp_number:
             raw_phone = str(obj.whatsapp_number).replace('+', '').replace(' ', '').replace('-', '')
             phone = '233' + raw_phone[1:] if raw_phone.startswith('0') else raw_phone
-            receipt_url = f"http://127.0.0.1:8001/receipt/{obj.id}/"
+
+            # Note: Update this URL to your Render URL when live
+            receipt_url = f"https://edemdu-zh9s.onrender.com/receipt/{obj.id}/"
+
             message = f"Hello *{obj.full_name}*,\n\nYour payment for *{obj.course.title}* is confirmed! ✅\n\nDownload receipt:\n{receipt_url}"
             url = f"https://api.whatsapp.com/send?phone={phone}&text={quote(message)}"
             return format_html(
@@ -58,6 +73,7 @@ class EnrollmentAdmin(admin.ModelAdmin):
         return format_html('<small style="color: gray;">Confirm status first</small>')
 
     def delete_button(self, obj):
+        # Dynamically find the delete URL
         delete_url = reverse('admin:courses_enrollment_delete', args=[obj.id])
         return format_html(
             '<a href="{}" style="background-color: #d9534f; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 11px;">Remove</a>',
