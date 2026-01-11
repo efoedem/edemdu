@@ -16,8 +16,13 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key-do-not-use-in
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 # Allow your Render URL and local hosts
-ALLOWED_HOSTS = ['edemdu.onrender.com', 'localhost', '127.0.0.1']
-
+# settings.py
+ALLOWED_HOSTS = [
+    'edemdu-zh9s.onrender.com',  # Your new unique URL
+    'edemdu.onrender.com',       # Keep the old one just in case
+    'localhost',
+    '127.0.0.1'
+]
 
 # --- APPLICATION DEFINITION ---
 INSTALLED_APPS = [
