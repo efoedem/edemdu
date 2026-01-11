@@ -17,12 +17,7 @@ DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 # Allow your Render URL and local hosts
 # settings.py
-ALLOWED_HOSTS = [
-    'edemdu-zh9s.onrender.com',  # Your new unique URL
-    'edemdu.onrender.com',       # Keep the old one just in case
-    'localhost',
-    '127.0.0.1'
-]
+ALLOWED_HOSTS = ['*']
 
 # --- APPLICATION DEFINITION ---
 INSTALLED_APPS = [
