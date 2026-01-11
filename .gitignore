@@ -6,3 +6,8 @@ __pycache__/
 db.sqlite3
 staticfiles/
 .idea/
+
+echo .idea/ >> .gitignore
+git add .gitignore
+git commit -m "Ignore PyCharm IDE files"
+git push origin main
