@@ -5,13 +5,15 @@ from django.urls import reverse
 from django.http import HttpResponse
 from django.db.models import Count, Sum, Q
 from openpyxl import Workbook
-from .models import Enrollment, Course, Category  # Added Category here
+from .models import Enrollment, Course, Category
 
 # --- Category Admin Registration ---
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
+    # Changed 'name' to 'title' to match your models.py
+    list_display = ('title', 'slug')
+    prepopulated_fields = {'slug': ('title',)} # This makes slug fill automatically!
+    search_fields = ('title',)
 
 # --- Course Admin Registration ---
 @admin.register(Course)
