@@ -60,12 +60,17 @@ class EnrollmentAdmin(admin.ModelAdmin):
         if obj.status == 'confirmed' and obj.whatsapp_number:
             raw_phone = str(obj.whatsapp_number).replace('+', '').replace(' ', '').replace('-', '')
             phone = '233' + raw_phone[1:] if raw_phone.startswith('0') else raw_phone
-            receipt_url = f"https://edemdu-zh9s.onrender.com/receipt/{obj.id}/"
+
+            # This line automatically uses the current site URL
+            site_domain = "https://studywithedem.onrender.com"
+            receipt_url = f"{site_domain}/receipt/{obj.id}/"
+
             message = f"Hello *{obj.full_name}*,\n\nYour payment for *{obj.course.title}* is confirmed! ✅\n\nDownload receipt:\n{receipt_url}"
             url = f"https://api.whatsapp.com/send?phone={phone}&text={quote(message)}"
-            return format_html('<a href="{}" target="_blank" style="background-color: #25D366; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-weight: bold;">Send WhatsApp</a>', url)
+            return format_html(
+                '<a href="{}" target="_blank" style="background-color: #25D366; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-weight: bold;">Send WhatsApp</a>',
+                url)
         return format_html('<small style="color: gray;">Confirm status first</small>')
-
     def delete_button(self, obj):
         delete_url = reverse('admin:courses_enrollment_delete', args=[obj.id])
         return format_html('<a href="{}" style="background-color: #d9534f; color: white; padding: 5px 10px; border-radius: 5px; text-decoration: none; font-size: 11px;">Remove</a>', delete_url)
