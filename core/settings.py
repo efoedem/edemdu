@@ -93,11 +93,14 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # --- DATABASE ---
 # Note: SQLite resets on Render free tier. Use Render PostgreSQL for persistent data.
+import dj_database_url
+
+# Uses PostgreSQL on Render, and SQLite locally
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
 }
 
 
