@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% endblock %}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-10 mx-auto">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="fw-bold">My Learning Dashboard</h2>
+                <a href="{% url 'course_list' %}" class="btn btn-primary">+ Enroll in New Course</a>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th class="ps-4">Course Name</th>
+                                <th>Date Enrolled</th>
+                                <th>Status</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enrollment in enrollments %}
+                            <tr class="align-middle">
+                                <td class="ps-4">
+                                    <span class="fw-bold text-dark">{{ enrollment.course.title }}</span>
+                                </td>
+                                <td>{{ enrollment.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    {% if enrollment.status == 'confirmed' %}
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2">Confirmed</span>
+                                    {% else %}
+                                        <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2">Pending Verification</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end pe-4">
+                                    {% if enrollment.status == 'confirmed' %}
+                                        <a href="{% url 'download_receipt' enrollment.id %}" class="btn btn-sm btn-outline-dark d-inline-flex align-items-center">
+                                            <span class="me-1">📄</span> Download Receipt
+                                        </a>
+                                    {% else %}
+                                        <button class="btn btn-sm btn-light disabled" title="Available after admin approval">
+                                            Processing...
+                                        </button>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center py-5">
+                                    <p class="text-muted mb-0">You haven't enrolled in any courses yet.</p>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

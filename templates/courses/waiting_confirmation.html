@@ -1,0 +1,55 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-7 text-center">
+            <div class="card shadow-lg border-0 p-5" style="border-radius: 20px;">
+
+                {% if enrollment.status == 'pending' %}
+                    <div class="mb-4">
+                        <div class="spinner-grow text-warning" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <h2 class="fw-bold text-dark">Payment Submitted!</h2>
+                    <h5 class="text-muted">Wait for Confirmation</h5>
+
+                    <p class="lead text-secondary mt-3">
+                        Transaction ID: <strong class="text-primary">{{ enrollment.reference_id }}</strong>
+                    </p>
+
+                    <div class="alert alert-light border mt-4">
+                        <p class="mb-0 text-muted small">
+                            Edem is verifying your payment. Once approved, the button below will turn <strong>Green</strong>.
+                        </p>
+                    </div>
+
+                    <button class="btn btn-secondary btn-lg w-100 mt-4 disabled" disabled style="cursor: not-allowed;">
+                        Download Receipt (Pending Approval)
+                    </button>
+
+                    <button onclick="window.location.reload();" class="btn btn-success">
+    🔄 Refresh Status
+</button>
+
+                {% else %}
+                    <div class="mb-4">
+                        <div class="display-1 text-success">✅</div>
+                    </div>
+                    <h2 class="fw-bold text-success">Payment Confirmed!</h2>
+                    <p class="lead text-secondary">Your enrollment for <strong>{{ enrollment.course.title }}</strong> is successful.</p>
+
+                    <a href="{% url 'download_receipt' enrollment.id %}" class="btn btn-success btn-lg w-100 mt-4 shadow-sm fw-bold">
+                        Download Official Receipt
+                    </a>
+                {% endif %}
+
+                <hr class="my-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'course_list' %}" class="btn btn-sm btn-link text-decoration-none">Back to Courses</a>
+                    <span class="small text-muted">Support: 0202653503</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

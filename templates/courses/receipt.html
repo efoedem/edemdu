@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Receipt - {{ enrollment.reference_id }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .receipt-card {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 40px;
+            border: 1px solid #eee;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0,0,0,0.05);
+        }
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 8rem;
+            color: rgba(40, 167, 69, 0.1);
+            font-weight: bold;
+            text-transform: uppercase;
+            pointer-events: none;
+            user-select: none;
+        }
+        .receipt-header { border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 30px; }
+        .receipt-title { color: #0056b3; font-weight: 800; text-transform: uppercase; }
+        .detail-label { color: #666; font-size: 0.85rem; text-transform: uppercase; font-weight: bold; }
+        .detail-value { font-size: 1.1rem; font-weight: 600; color: #333; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background-color: #fff; }
+            .receipt-card { border: none; box-shadow: none; margin: 0 auto; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="text-center mt-4 no-print">
+    <button onclick="window.print()" class="btn btn-dark px-4 me-2">🖨️ Print Receipt</button>
+    <a href="{% url 'course_list' %}" class="btn btn-outline-secondary px-4">Back to Courses</a>
+</div>
+
+    <div class="receipt-card">
+        <div class="watermark">PAID</div>
+
+        <div class="receipt-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2 class="receipt-title m-0">EDEM TUTORIALS</h2>
+                <p class="text-muted m-0">Quality Education & Practical Training</p>
+                <p class="small text-muted m-0">Accra, Ghana | Support: 0202653503</p>
+            </div>
+            <div class="text-end">
+                <h4 class="m-0">OFFICIAL RECEIPT</h4>
+                <p class="text-muted mb-0 small">Date: {{ enrollment.created_at|date:"D, d M Y" }}</p>
+                <p class="fw-bold text-primary mb-0">#{{ enrollment.reference_id }}</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-6">
+                <p class="detail-label mb-1">Billed To:</p>
+                <p class="detail-value mb-0">{{ enrollment.full_name }}</p>
+                <p class="text-muted small">Index Number: {{ enrollment.index_number }}</p>
+            </div>
+            <div class="col-6 text-end">
+                <p class="detail-label mb-1">Payment Method:</p>
+                <p class="detail-value">Telecel Cash</p>
+            </div>
+
+            <div class="col-12 mt-4">
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Description</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-end">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>{{ enrollment.course.title }}</strong><br>
+                                <small class="text-muted">Complete Course Enrollment Access</small>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-success">Confirmed</span>
+                            </td>
+                            <td class="text-end fw-bold">GHS {{ enrollment.course.price }}</td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="2" class="text-end">TOTAL PAID</th>
+                            <th class="text-end text-primary h5">GHS {{ enrollment.course.price }}</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+        <div class="mt-5 pt-4 border-top">
+            <div class="row">
+                <div class="col-8">
+                    <p class="small text-muted italic">
+                        * This is a computer-generated receipt and requires no physical signature.<br>
+                        * Access to course materials is granted immediately upon confirmation.
+                    </p>
+                </div>
+                <div class="col-4 text-center">
+                    <div style="height: 50px;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3a/Jon_Kirsch_Signature.svg/1200px-Jon_Kirsch_Signature.svg.png" alt="Signature" style="max-height: 100%;">
+                    </div>
+                    <hr class="my-1">
+                    <p class="small fw-bold mb-0">Authorized Registrar</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="text-center mt-5">
+            <p class="small text-muted fw-bold">THANK YOU FOR YOUR ENROLLMENT!</p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
