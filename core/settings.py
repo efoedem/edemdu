@@ -2,22 +2,44 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 
-# Load environment variables from .env file (for local development)
-load_dotenv()
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from .env file if it exists (Local Development)
+if os.path.exists(BASE_DIR / '.env'):
+    load_dotenv()
+
 # --- SECURITY SETTINGS ---
-# SECRET_KEY is pulled from environment variables on Render
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key-do-not-use-in-prod')
 
-# DEBUG should be False in production (set DEBUG=False in Render Environment)
+# DEBUG should be False in production (Set DEBUG=False in Render Environment Variables)
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 # Allow your Render URL and local hosts
-# settings.py
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'edemdu-zh9s.onrender.com',
+    'edemdu.onrender.com',
+    'studywithedem.onrender.com',
+    'localhost',
+    '127.0.0.1',
+    '*' # Kept for troubleshooting, but specific domains above are preferred
+]
+
+# Tell Django to trust the Render domain for secure form submissions
+CSRF_TRUSTED_ORIGINS = [
+    'https://edemdu-zh9s.onrender.com',
+    'https://edemdu.onrender.com',
+    'https://studywithedem.onrender.com'
+]
+
+# Ensure cookies are only sent over HTTPS (Good for security)
+if not DEBUG:
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # --- APPLICATION DEFINITION ---
 INSTALLED_APPS = [
@@ -70,7 +92,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # --- DATABASE ---
-# SQLite is used here. Note: Data resets on Render free tier restarts.
+# Note: SQLite resets on Render free tier. Use Render PostgreSQL for persistent data.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -81,6 +103,7 @@ DATABASES = {
 
 # --- AUTHENTICATION ---
 AUTH_USER_MODEL = 'users.CustomUser'
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -104,13 +127,8 @@ STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# WhiteNoise optimization for faster loading
-# settings.py
-
-# 1. Change the storage to the most basic WhiteNoise version
+# WhiteNoise storage configuration
 STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
-
-# 2. Add these lines to help WhiteNoise find the files
 WHITENOISE_MANIFEST_STRICT = False
 
 
@@ -130,7 +148,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD') # Gmail App Password
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', EMAIL_HOST_USER)
 
