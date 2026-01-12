@@ -1,4 +1,5 @@
 import os
+import dj_database_url
 from pathlib import Path
 from dotenv import load_dotenv
 
@@ -12,17 +13,15 @@ if os.path.exists(BASE_DIR / '.env'):
 # --- SECURITY SETTINGS ---
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-fallback-key-do-not-use-in-prod')
 
-# DEBUG should be False in production (Set DEBUG=False in Render Environment Variables)
+# DEBUG should be False in production
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-# Allow your Render URL and local hosts
 ALLOWED_HOSTS = [
     'edemdu-zh9s.onrender.com',
     'edemdu.onrender.com',
     'studywithedem.onrender.com',
     'localhost',
     '127.0.0.1',
-    '*' # Kept for troubleshooting, but specific domains above are preferred
 ]
 
 # Tell Django to trust the Render domain for secure form submissions
@@ -32,7 +31,6 @@ CSRF_TRUSTED_ORIGINS = [
     'https://studywithedem.onrender.com'
 ]
 
-# Ensure cookies are only sent over HTTPS (Good for security)
 if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
@@ -43,7 +41,6 @@ if not DEBUG:
 
 # --- APPLICATION DEFINITION ---
 INSTALLED_APPS = [
-    'cloudinary_storage',  # Must be above staticfiles
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     # Third party
+    'cloudinary_storage', # Moved below staticfiles to let WhiteNoise handle CSS
     'cloudinary',
 
     # Your Apps
@@ -90,19 +88,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
-
 # --- DATABASE ---
-# Note: SQLite resets on Render free tier. Use Render PostgreSQL for persistent data.
-import dj_database_url
-
-# Uses PostgreSQL on Render, and SQLite locally
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///db.sqlite3',
         conn_max_age=600
     )
 }
-
 
 # --- AUTHENTICATION ---
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -117,34 +109,30 @@ AUTH_PASSWORD_VALIDATORS = [
 LOGIN_REDIRECT_URL = 'course_list'
 LOGOUT_REDIRECT_URL = 'course_list'
 
-
 # --- INTERNATIONALIZATION ---
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-
 # --- STATIC FILES (CSS, JavaScript, Images) ---
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 
-# WhiteNoise storage configuration
-STATICFILES_STORAGE = 'whitenoise.storage.StaticFilesStorage'
+# Use WhiteNoise to serve static files with compression and caching
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 WHITENOISE_MANIFEST_STRICT = False
-
 
 # --- MEDIA FILES (Cloudinary) ---
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': os.getenv('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': os.getenv('CLOUDINARY_API_KEY'),
     'API_SECRET': os.getenv('CLOUDINARY_API_SECRET'),
-    'SECURE': True,  # <--- Add this line!
+    'SECURE': True,
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 
 # --- EMAIL CONFIGURATION ---
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -155,7 +143,6 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 ADMIN_EMAIL = os.getenv('ADMIN_EMAIL', EMAIL_HOST_USER)
-
 
 # --- MISC ---
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
