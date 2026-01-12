@@ -6,10 +6,27 @@ from .forms import EnrollmentForm
 
 
 def course_list(request):
-    """Displays all available courses."""
-    courses = Course.objects.all()
-    return render(request, 'courses/course_list.html', {'courses': courses})
+    courses = Course.objects.all().select_related('category')
 
+    levels = ['100', '200', '300', '400']
+    organized_courses = {}
+
+    for level in levels:
+        level_courses = courses.filter(level=level)
+
+        schools = {}
+        for course in level_courses:
+            school_name = course.category.title
+            if school_name not in schools:
+                schools[school_name] = []
+            schools[school_name].append(course)
+
+        # Only add the level to the dictionary if it has courses or schools
+        if schools:
+            organized_courses[level] = schools
+
+    # Note the context name: 'organized_data'
+    return render(request, 'courses/course_list.html', {'organized_data': organized_courses})
 
 def course_detail(request, pk):
     """Displays details for a specific course."""

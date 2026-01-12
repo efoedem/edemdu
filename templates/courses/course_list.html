@@ -5,48 +5,87 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Available Courses | EDEM</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        .course-img { height: 200px; object-fit: cover; }
-        .navbar-brand { font-weight: bold; color: #6c63ff !important; }
+        :root { --primary-purple: #6c63ff; }
+        .course-img { height: 180px; object-fit: cover; }
+        .navbar-brand { font-weight: bold; color: var(--primary-purple) !important; }
+
+        /* Level Styling */
+        .level-header {
+            background: var(--primary-purple);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 40px;
+            font-size: 1.4rem;
+        }
+        .school-title {
+            color: #444;
+            font-weight: 700;
+            margin: 25px 0 15px 10px;
+            border-left: 4px solid var(--primary-purple);
+            padding-left: 15px;
+        }
+
+        .card { transition: transform 0.2s; border: none; }
+        .card:hover { transform: translateY(-5px); }
         .footer { background: #ffffff; border-top: 1px solid #eee; padding: 40px 0; margin-top: 60px; }
-        .contact-icon { font-size: 1.2rem; margin-right: 10px; color: #6c63ff; }
+        .contact-icon { font-size: 1.2rem; margin-right: 10px; color: var(--primary-purple); }
     </style>
 </head>
 <body class="bg-light">
 
-    <nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm mb-4">
+    <nav class="navbar navbar-expand-lg navbar-white bg-white shadow-sm sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'course_list' %}">Edem Learning Hub | Smart Study. Better Results.</a>
+            <a class="navbar-brand" href="{% url 'course_list' %}">
+                <i class="fas fa-graduation-cap me-2"></i>Edem Learning Hub
+            </a>
+            <span class="text-muted small d-none d-md-inline">Smart Study. Better Results.</span>
         </div>
     </nav>
 
-    <div class="container">
-        <h2 class="mb-4 fw-bold">Available Courses</h2>
-        <div class="row">
-            {% for course in courses %}
-            <div class="col-md-4 mb-4">
-                <div class="card h-100 border-0 shadow-sm">
-                    <img src="{{ course.thumbnail.url }}" class="card-img-top course-img" alt="{{ course.title }}">
-                    <div class="card-body">
-                        {% if course.category %}
-                            <span class="badge bg-secondary-subtle text-secondary mb-2">{{ course.category.title }}</span>
-                        {% endif %}
-                        <h5 class="card-title fw-bold">{{ course.title }}</h5>
-                        <p class="card-text text-muted small">{{ course.description|truncatewords:15 }}</p>
-                        <div class="d-flex justify-content-between align-items-center mt-3">
-                            <span class="h5 mb-0 text-primary fw-bold">GHS {{ course.price }}</span>
-                           <a href="{% url 'course_detail' course.pk %}" class="btn btn-primary btn-sm px-3">View Details</a>
+    <div class="container py-4">
+    <h1 class="mb-4 fw-bold text-center">Course Directory</h1>
+
+    {% for level, schools in organized_data.items %}
+        <div class="level-container mb-5">
+            <h2 class="level-header shadow-sm">
+                <i class="fas fa-layer-group me-2"></i>Level {{ level }}
+            </h2>
+
+            {% for school_name, courses in schools.items %}
+                <h3 class="school-title">{{ school_name }}</h3>
+
+                <div class="row">
+                    {% for course in courses %}
+                        <div class="col-md-4 mb-4">
+                            <div class="card h-100 shadow-sm border-0">
+                                <img src="{{ course.thumbnail.url }}" class="card-img-top course-img" alt="{{ course.title }}">
+                                <div class="card-body">
+                                    <h5 class="card-title fw-bold mb-3">{{ course.title }}</h5>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="h5 mb-0 text-primary fw-bold">GHS {{ course.price }}</span>
+                                        <a href="{% url 'course_detail' course.pk %}" class="btn btn-primary btn-sm px-3">
+                                            View Details
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                    {% endfor %}
                 </div>
-            </div>
-            {% empty %}
-            <div class="col-12 text-center py-5">
-                <p class="lead text-muted">No courses available yet. Check back later!</p>
-            </div>
             {% endfor %}
         </div>
-    </div>
+    {% empty %}
+        <div class="text-center py-5">
+            <i class="fas fa-book-open fa-3x text-muted mb-3"></i>
+            <p class="lead text-muted">No courses available yet. Check back later!</p>
+        </div>
+    {% endfor %}
+</div>
+
 
     <footer class="footer">
         <div class="container">
@@ -58,21 +97,21 @@
                 <div class="col-md-6">
                     <div class="card border-0 bg-light p-3">
                         <div class="d-flex align-items-center mb-3">
-                            <span class="contact-icon">📱</span>
+                            <span class="contact-icon"><i class="fab fa-whatsapp"></i></span>
                             <div>
                                 <h6 class="mb-0 fw-bold">Call / WhatsApp</h6>
                                 <p class="mb-0 text-muted">0202653503 / 055XXXXXXX</p>
                             </div>
                         </div>
                         <div class="d-flex align-items-center mb-3">
-                            <span class="contact-icon">📧</span>
+                            <span class="contact-icon"><i class="fas fa-envelope"></i></span>
                             <div>
                                 <h6 class="mb-0 fw-bold">Email Support</h6>
                                 <p class="mb-0 text-muted">support@edemtutorials.com</p>
                             </div>
                         </div>
                         <div class="d-flex align-items-center">
-                            <span class="contact-icon">📍</span>
+                            <span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span>
                             <div>
                                 <h6 class="mb-0 fw-bold">Location</h6>
                                 <p class="mb-0 text-muted">Accra, Ghana (Virtual & Physical Sessions)</p>
