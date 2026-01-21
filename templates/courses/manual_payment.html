@@ -1,105 +1,161 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enrollment & Payment | EDEM</title>
 
-<div class="container mt-5 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow-lg border-0 p-4">
-                <h3 class="text-center mb-4 fw-bold">Enrollment & Payment</h3>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-                <div class="p-3 mb-4 border rounded" style="background-color: #e7f3ff; border-left: 5px solid #0d6efd !important;">
-                    <h6 class="fw-bold text-dark mb-2">Payment Mode: TELECEL CASH</h6>
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <span class="fs-5">Number: <strong id="telecel-num">0202653503</strong></span>
-                        <button type="button" onclick="copyNum()" class="btn btn-sm btn-primary">Copy</button>
-                    </div>
-                    <p class="mb-0 fs-6">Name: <strong>HLODZE PRINCE</strong></p>
-                    <div id="copy-toast" class="text-success small fw-bold mt-1" style="display:none;">✓ Number copied to clipboard!</div>
+    <style>
+        :root { --primary-blue: #0d6efd; }
+
+        /* Centering the card vertically and horizontally */
+        .page-wrapper {
+            min-vh-100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f8f9fa;
+        }
+
+        .enrollment-card {
+            border-radius: 15px;
+            max-width: 550px;
+            width: 100%;
+        }
+
+        .payment-info-box {
+            background-color: #e7f3ff;
+            border-left: 5px solid var(--primary-blue) !important;
+            border-radius: 8px;
+        }
+
+        /* Form styling */
+        input[name="full_name"],
+        input[name="index_number"],
+        input[name="reference_id"] {
+            text-transform: uppercase;
+        }
+
+        .form-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+        }
+
+        .checkbox-container {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+<div class="page-wrapper py-5 px-3">
+    <div class="enrollment-card">
+        <div class="card shadow-lg border-0 p-4">
+            <h3 class="text-center mb-4 fw-bold">Enrollment & Payment</h3>
+
+            <div class="payment-info-box p-3 mb-4 border">
+                <h6 class="fw-bold text-dark mb-2"><i class="fas fa-wallet me-2"></i>Payment Mode: TELECEL CASH</h6>
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fs-5">Number: <strong id="telecel-num">0202653503</strong></span>
+                    <button type="button" onclick="copyNum(this)" class="btn btn-sm btn-primary px-3">Copy</button>
                 </div>
+                <p class="mb-0 fs-6">Name: <strong>HLODZE PRINCE</strong></p>
+                <div id="copy-toast" class="text-success small fw-bold mt-1" style="display:none;">
+                    <i class="fas fa-check-circle me-1"></i> Number copied to clipboard!
+                </div>
+            </div>
 
-                {% if form.errors %}
-                <div class="alert alert-danger border-0 shadow-sm py-2">
-                    <p class="fw-bold small mb-1">Please correct the following:</p>
-                    <ul class="mb-0 small">
-                        {% for field in form %}
-                            {% for error in field.errors %}
-                                <li>{{ error }}</li>
-                            {% endfor %}
+            {% if form.errors %}
+            <div class="alert alert-danger border-0 shadow-sm py-2">
+                <p class="fw-bold small mb-1">Please correct the following:</p>
+                <ul class="mb-0 small">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ error }}</li>
                         {% endfor %}
-                    </ul>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">FULL NAME (MAX 20 LETTERS)</label>
+                    {{ form.full_name }}
                 </div>
-                {% endif %}
 
-                <form method="POST">
-                    {% csrf_token %}
+                <div class="mb-3">
+                    <label class="form-label fw-bold">INDEX NUMBER (10 CHARACTERS)</label>
+                    {{ form.index_number }}
+                </div>
 
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">FULL NAME (MAX 20 LETTERS)</label>
-                        {{ form.full_name }}
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">WHATSAPP NUMBER</label>
+                    {{ form.whatsapp_number }}
+                    <div class="form-text mt-1" style="font-size: 0.75rem;">Example: 0244000000 (Exactly 10 digits)</div>
+                </div>
 
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">INDEX NUMBER (10 CHARACTERS)</label>
-                        {{ form.index_number }}
-                    </div>
+                <div class="mb-3">
+                    <label class="form-label fw-bold">TRANSACTION REFERENCE ID</label>
+                    {{ form.reference_id }}
+                </div>
 
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">WHATSAPP NUMBER</label>
-                        {{ form.whatsapp_number }}
-                        <div class="form-text mt-1" style="font-size: 0.75rem;">Example: 0244000000 (Exactly 10 digits)</div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label small fw-bold text-muted">TRANSACTION REFERENCE ID</label>
-                        {{ form.reference_id }}
-                    </div>
-
-                    <div class="form-check mb-4 bg-light p-3 rounded border">
+                <div class="checkbox-container p-3 mb-4 d-flex align-items-center">
+                    <div class="form-check m-0">
                         {{ form.payment_confirmed }}
                         <label class="form-check-label small fw-bold ms-2" for="{{ form.payment_confirmed.id_for_label }}">
-                            {{ form.payment_confirmed.label }}
+                            I confirm that I have sent the payment and the Reference ID is correct.
                         </label>
                     </div>
+                </div>
 
-                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow-sm">
-                        PAYMENT COMPLETE
-                    </button>
-                </form>
-            </div>
+                <button type="submit" class="btn btn-primary w-100 py-3 fw-bold shadow-sm">
+                    PAYMENT COMPLETE
+                </button>
+            </form>
+        </div>
 
-            <div class="text-center mt-3">
-                <a href="{% url 'course_list' %}" class="text-muted text-decoration-none small">← Back to Courses</a>
-            </div>
+        <div class="text-center mt-4">
+            <a href="{% url 'course_list' %}" class="text-muted text-decoration-none small">
+                <i class="fas fa-arrow-left me-1"></i> Back to Courses
+            </a>
         </div>
     </div>
 </div>
 
-<style>
-    /* Live Uppercase typing effect */
-    input[name="full_name"],
-    input[name="index_number"],
-    input[name="reference_id"] {
-        text-transform: uppercase;
-    }
-
-    /* Ensuring the checkbox is aligned */
-    .form-check-input {
-        float: none;
-        margin-left: 0;
-    }
-
-    .form-control:focus {
-        border-color: #0d6efd;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
-    }
-</style>
-
 <script>
-function copyNum() {
+function copyNum(btn) {
     const num = document.getElementById('telecel-num').innerText;
     navigator.clipboard.writeText(num).then(() => {
         const toast = document.getElementById('copy-toast');
+        const originalText = btn.innerText;
+
+        // Visual Feedback
+        btn.innerText = "Copied!";
+        btn.classList.replace('btn-primary', 'btn-success');
         toast.style.display = 'block';
-        setTimeout(() => { toast.style.display = 'none'; }, 3000);
+
+        setTimeout(() => {
+            toast.style.display = 'none';
+            btn.innerText = originalText;
+            btn.classList.replace('btn-success', 'btn-primary');
+        }, 3000);
     });
 }
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
